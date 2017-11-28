@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>index2</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no,minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="screen-orientation" content="portrait">
+
+    <meta name="full-screen" content="yes">
+
+    <meta name="browsermode" content="application">
+
+    <meta name="x5-orientation" content="portrait">
+
+    <meta name="x5-fullscreen" content="true">
+
+    <meta name="x5-page-mode" content="app">
+    <link rel="stylesheet" href="reset.css">
+    <style>
+        html{
+            width: 100%;
+            height: 100%;
+        }
+        .main{
+            width: 100%;
+            display: flex;
+            margin-top: 100px;
+        }
+        .divleft{
+            flex: 0 0 100px;
+            border: 1px solid green;
+        }
+        .divright {
+            flex: 1;
+            border: 1px solid red;
+        }
+        .scroll{
+            height: 500px;
+            overflow: hidden;
+        }
+        .scrolltwo{
+            height: 500px;
+            overflow: hidden;
+        }
+        .scroll li.active{
+            background-color: red;
+            color: green;
+            font-size: 40px;
+        }
+        .scroll li{
+            width: 100%;
+            height: 100px;
+            line-height: 100px;
+            text-align: center;
+            font-size: 20px;
+            color: red;
+            border-bottom: 1px solid green;
+            background-color: antiquewhite;
+        }
+        .scrolltwo li{
+            width: 100%;
+            height: 150px;
+            line-height: 150px;
+            text-align: center;
+            font-size: 15px;
+            color: red;
+            border-bottom: 1px solid green;
+            background-color: antiquewhite;
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+    <div class="divleft scroll">
+        <ul class="con">
+            <li class="ll0 active">1</li>
+            <li class="ll1">2</li>
+            <li class="ll2">3</li>
+            <li class="ll3">4</li>
+            <li class="ll4">5</li>
+            <li class="ll5">6</li>
+            <li class="ll6">7</li>
+            <li class="ll7">8</li>
+            <li class="ll8">9</li>
+            <li class="ll9">10</li>
+        </ul>
+    </div>
+    <div class="divright scrolltwo">
+        <ul class="contwo">
+            <li class="li0"><a href="####">1213231</a></li>
+            <li class="li1">222222222<a href="index2.html">1213231</a></li>
+            <li class="li2">333333333</li>
+            <li class="li3">444444444<a href="index2.html">1213231</a></li>
+            <li class="li4">555555555<a href="index2.html">1213231</a></li>
+            <li class="li5">666666666<a href="index2.html">1213231</a></li>
+            <li class="li6">777777777<a href="index2.html">1213231</a></li>
+            <li class="li7">888888888<a href="index2.html">1213231</a></li>
+            <li class="li8">999999999<a href="index2.html">1213231</a></li>
+            <li style="height: 500px" class="li9">000000000<a href="####">1213231</a></li>
+        </ul>
+    </div>
+</div>
+<button>btn</button>
+<script src="jquery-3.2.1.min.js"></script>
+<script src="https://unpkg.com/better-scroll@1.0.1/dist/bscroll.min.js"></script>
+<script>
+    var scroll = new BScroll('.scroll',{
+        scrollY: true,
+        tap: true,
+        probeType: 3
+    })
+    var scrolltwo = new BScroll('.scrolltwo',{
+        scrollY: true,
+        tap: true,
+        click: true,
+        probeType: 3
+    })
+    $('.con li').on('tap',function () {
+        var index = '.li' + $('.con li').index($(this));
+        $('.con li.active').removeClass('active')
+        $(this).addClass('active')
+        scrollTE(index)
+    })
+
+    function scrollTE (el) {
+        scrolltwo.scrollToElement(el,300)
+    }
+
+//    右边touch  获取坐标
+
+    scrolltwo.on('scroll',function (pos) {
+//        console.log(pos)
+    })
+//获取右边列表各个高度
+    function getheightArr () {
+        var heightArr = []
+        var ele = 0;
+        $('.contwo li').each(function () {
+            ele =ele + $(this).outerHeight()
+            heightArr.push(ele)
+        })
+        console.log(heightArr)
+    }
+    getheightArr()
+
+    //    右边div touch  相应获取坐标
+    $('.contwo').on('touchstart',function (e) {
+//        console.log(e.touches[0].pageY)
+//        console.log(e.touches[0].pageX)
+    })
+    scrolltwo.on('scroll',function (pos) {
+//        console.log(pos.y)
+    })
+
+
+
+
+    $('button').on('touchend',function () {
+        console.log($('.contwo .li0')[0].offsetHeight)
+    })
+
+
+
+
+
+//    begin
+    var ARR = [150, 300, 450, 600, 750, 900, 1050, 1200, 1350, 1500];
+    var touch = {};
+    var init = false;
+    $('.contwo').on('touchstart',function (e) {
+        init = true;
+        touch.page1X = e.touches[0].pageX;
+        touch.page1Y = e.touches[0].pageY;
+    })
+    scrolltwo.on('scroll',function (pos) {
+        touch.page2X = pos.x
+        touch.page2Y = pos.y
+        var x = Math.abs(touch.page2X-touch.page1X);
+        var y = Math.abs(touch.page2Y-touch.page1Y);
+//        console.log(pos.y)
+        if(x>y){
+            return
+        }else{
+            goto(pos.y)
+        }
+    })
+    function goto (val) {
+        val = Math.abs(val)
+        for (var i=0; i<ARR.length-1; i++) {
+            if(val <= ARR[0]) {
+                gotoFun(0)
+                return
+            }
+            if(val > ARR[i] && val <= ARR[i+1]){
+                gotoFun(i+1)
+                return
+            }
+            if(val > ARR[ARR.length]){
+                gotoFun(ARR.length)
+                return
+            }
+        }
+    }
+    function gotoFun (n) {
+        console.log(n)
+        var el = '.ll' + n
+        console.log(el)
+        scroll.scrollToElement(el,300)
+        $('.con li.active').removeClass('active')
+        $('.con li'+el).addClass('active')
+
+    }
+</script>
+</body>
+</html>
